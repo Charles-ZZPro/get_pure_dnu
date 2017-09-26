@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>random number</title>
+<!-- <script src="https://github.com/Charles-ZZPro/aliyun-oss-python-sdk/blob/master/multi_download.js" type="text/javascript"></script> -->
+<!-- <script src="{% static "/multi_download.js" %}" type="text/javascript"></script> -->
+<script src="{% static "/jquery-3.2.1.js" %}" type="text/javascript"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>   -->
+</head>
+<body>
+<!-- <a href="url" target="_blank" onclick="closewin();" id="alink">点击超链接</a> -->
+<script>
+function sleep(d){
+  for(var t = Date.now();Date.now() - t <= d;);
+}
+
+
+
+// 　　function f1(callback){
+
+// 　　　　setTimeout(function () {
+
+// 　　　　　　// f1的任务代码
+
+// 　　　　　　callback();
+
+// 　　　　}, 1000);
+
+// 　　}
+
+// 　　function click_z(aLink){
+
+//     aLink.click()
+
+// 　　}
+
+
+var List = {{ List|safe }};
+
+for(var i = 0; i < List.length; i++){
+	window.open(List[i])
+}
+
+// var mycars = new Array()
+// // alert("fff")
+// // Downer(List);
+// for(var i = 0; i < List.length; i++){
+// 	var aLink = document.createElement("a");
+// 	// aLink.class  =  "downloadable"
+// 	// aLink.href = List[i]
+// 	// aLink.id = "li"+i
+// 	aLink.setAttribute("id","li"+i);
+// 	// alert(List[i])
+// 	aLink.setAttribute("href",List[i]);
+// 	aLink.setAttribute("class","downloadable");
+// 	aLink.setAttribute("name","li"+i);
+// 	aLink.click();
+// 	// setTimeout("alert('5 seconds!')",5000)
+// 	// f1(click(aLink))
+// 	// sleep(20000);
+// 	// var iddd = "li"+i
+// 	// mycars.push(iddd)
+// }
+
+
+// document.getElementById("alink").click();
+// alert(mycars)
+
+// for(var j = 0; j < mycars.length; j++){
+// 	alert(mycars[j])
+//     document.getElementsByName(mycars[j]).click();
+// }
+
+
+</script>
+<!-- var List = {{ List|safe }};
+Downer(List); -->
+
+</body>
+</html>
