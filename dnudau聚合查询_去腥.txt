@@ -1,0 +1,134 @@
+####### ﻿dnu : select count(distinct androidId) cnt_dnu from StatUser where createdAt>='2017-09-12T16:00:00.000Z' and createdAt<'2017-09-13T16:00:00.000Z' and (projectId='fanzhuo_S004' or projectId='ota_003')
+
+  
+dnu：
+
+select "ad_ota_003" as project_id, count(*) as dnu from 
+
+(select *,row_number() over (partition by androidId order by createdAt asc) num from StatUser) t 
+
+where t.num=1 
+
+and t.createdAt>='2017-09-14T16:00:00.000Z' and t.createdAt<'2017-09-15T16:00:00.000Z' 
+
+and t.projectId='ad_ota_003'
+
+
+dnu和dau：无前缀去重
+select dnu_table.dnu, dau_table.dau from
+(select "ota_003" as project_id, count(*) as dnu from 
+  (select *,row_number() over (partition by androidId order by createdAt asc) num from StatUser) t 
+  where t.num=1 
+  and t.createdAt>='2017-09-19T16:00:00.000Z' and t.createdAt<'2017-09-20T16:00:00.000Z' 
+  and t.projectId='ota_003'
+) as dnu_table,
+(select "ota_003" as project_id, count(*) as dau from 
+  (select *,row_number() over (partition by androidId order by createdAt asc) num from StatUser) t 
+  join StatDAU b on b.userId=t.objectId 
+  where t.num=1 
+  and b.createdAt>='2017-09-19T16:00:00.000Z' and b.createdAt<'2017-09-20T16:00:00.000Z' 
+  and t.projectId='ota_003' 
+) as dau_table
+
+dnu：有前缀去重
+select "ad_ota_003" as project_id, count(oid) as dnu from 
+
+(select * ,row_number() over (partition by aid order by time asc) num from 
+ 
+  (select distinct a.objectId as oid,a.androidId as aid,a.projectId as pid, a.createdAt as time from StatUser a join StatUser b on (a.androidId=b.androidId and a.projectId!=b.projectId) 
+   
+   where a.projectId=concat('ad',b.projectId) or (substr(a.projectId,0,2)!='ad' and b.projectId=concat('ad',a.projectId))
+ 
+   ) tf
+ 
+) t 
+
+where t.num=1 
+
+and t.time>='2017-09-14T16:00:00.000Z' and t.time<'2017-09-15T16:00:00.000Z' 
+
+and t.pid='ad_ota_003'
+
+
+
+
+  
+纯dau：
+
+select "ad_ota_003" as project_id, count(*) as dau from 
+
+(select *,row_number() over (partition by androidId order by createdAt asc) num from StatUser) t 
+
+join StatDAU b on b.userId=t.objectId 
+
+where t.num=1 
+
+and b.verified=true 
+
+and b.createdAt>='2017-09-14T16:00:00.000Z' and b.createdAt<'2017-09-15T16:00:00.000Z' 
+
+and t.projectId='ad_ota_003'
+
+
+
+
+纯dau：有前缀去重
+select "ad_ota_003" as project_id, count(oid) as dau from 
+
+(select *,row_number() over (partition by aid order by time asc) num from 
+ 
+  (select distinct a.objectId as oid,a.androidId as aid,a.projectId as pid, a.createdAt as time from StatUser a join StatUser b on (a.androidId=b.androidId and a.projectId!=b.projectId) 
+   
+   where a.projectId=concat('ad',b.projectId) or (substr(a.projectId,0,2)!='ad' and b.projectId=concat('ad',a.projectId))
+ 
+  )tf
+
+)t 
+
+join StatDAU c on c.userId=t.oid 
+
+where t.num=1 
+
+and c.verified=true 
+
+and c.createdAt>='2017-09-14T16:00:00.000Z' and c.createdAt<'2017-09-15T16:00:00.000Z' 
+
+and t.pid='ad_ota_003'
+
+
+
+毛dau：
+
+select "ad_ota_003" as project_id, count(*) as dau from 
+
+(select *,row_number() over (partition by androidId order by createdAt asc) num from StatUser) t 
+
+join StatDAU b on b.userId=t.objectId 
+
+where t.num=1 
+
+and b.createdAt>='2017-09-14T16:00:00.000Z' and b.createdAt<'2017-09-15T16:00:00.000Z' 
+
+and t.projectId='ad_ota_003' 
+
+
+毛dau：有前缀去重
+select "ad_ota_003" as project_id, count(oid) as dau from 
+
+(select *,row_number() over (partition by aid order by time asc) num from 
+ 
+   (select distinct a.objectId as oid,a.androidId as aid,a.projectId as pid, a.createdAt as time from StatUser a join StatUser b on (a.androidId=b.androidId and a.projectId!=b.projectId) 
+   
+    where a.projectId=concat('ad',b.projectId) or (substr(a.projectId,0,2)!='ad' and b.projectId=concat('ad',a.projectId))
+ 
+    ) tf
+) t 
+
+join StatDAU c on c.userId=t.oid 
+
+where t.num=1 
+
+and c.createdAt>='2017-09-14T16:00:00.000Z' and c.createdAt<'2017-09-15T16:00:00.000Z' 
+
+and t.pid='ad_ota_003'
+
